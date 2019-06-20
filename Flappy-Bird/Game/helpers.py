@@ -10,7 +10,7 @@ BLACK =     (   0,  0,   0)
 COLOURS = [WHITE,BLUE,GREEN,RED,BLACK]
 
 #screen
-SCREEN_SIZE = SCREEN_WIDTH,SCREEN_HEIGHT = 1000,700
+SCREEN_SIZE = SCREEN_WIDTH,SCREEN_HEIGHT = 400, 550
 
 #vectors
 GRAVITY = [5.0, 3*math.pi/2] # not 9.8 because it seems too high
