@@ -43,7 +43,7 @@ class Bird:
         # check if user input is present
         if self.playerFlapped:
             # change speed of bird to represent a flap
-            self.speed = -9
+            self.speed = -8
 
             # change rotation of bird
             self.rotation = 45
@@ -119,6 +119,15 @@ def collisionDetector(bird, birdHeight, birdWidth, pipes, pipeHeight, pipeWidth)
             lowerPos = pipe.lower_y
 
             # todo: create masks instead, because the bird is treated as a square in this collision detector
+
+            # get image alpha
+
+            # use boolean to see which pixel is actually drawn
+
+            # use that mask to detect for collision
+
+            # DO THIS ONCE AT THE START, then use the mask
+
             # detect for collision
             # check if x is too close
             if bird.x + birdWidth > pipe.x and \
@@ -180,6 +189,16 @@ def main():
                     # flap the bird
                     bird.playerFlapped = True
 
+        # HEURISTIC
+        # closest pipe
+        # todo: remove, the heuristic below
+        # for pipe in pipes:
+        #     if abs(pipe.x - bird.x) > 120:
+        #         continue
+        #     if bird.y + birdHeight > pipe.lower_y - 5 and not pipeCrash:
+        #         bird.playerFlapped = True
+        #     else:
+        #         bird.playerFlapped = False
 
         # load background
         DISPLAY.fill(helpers.WHITE)
