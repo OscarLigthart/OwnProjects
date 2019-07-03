@@ -1,6 +1,9 @@
 import pygame, sys, math, helpers, random, time
+import io
+
 import numpy as np
 from pygame.locals import *
+from PIL import Image
 
 # GLOBALS
 
@@ -94,7 +97,7 @@ class PipePairs:
         self.x -= self.speed
 
 
-def collisionDetector(bird, birdHeight, birdWidth, pipes, pipeHeight, pipeWidth):
+def collisionDetector(bird, birdHeight, birdWidth, pipes, pipeHeight, pipeWidth, birdBox, upperBox, lowerBox):
     """
     This function checks whether the bird collided with the base or a pipe
     :param bird: the player
@@ -115,31 +118,48 @@ def collisionDetector(bird, birdHeight, birdWidth, pipes, pipeHeight, pipeWidth)
             if abs(pipe.x - bird.x) > 100:
                 continue
 
-            upperPos = pipe.upper_y
+            upperPos = -pipeHeight + pipe.upper_y
             lowerPos = pipe.lower_y
 
-            # todo: create masks instead, because the bird is treated as a square in this collision detector
+            # create rectangles
+            flappyRect = pygame.Rect(bird.x, bird.y, birdWidth, birdHeight)
+            upperRect = pygame.Rect(pipe.x, upperPos, pipeWidth, pipeHeight)
+            lowerRect = pygame.Rect(pipe.x, lowerPos, pipeWidth, pipeHeight)
 
-            # get image alpha
+            # check if hitboxes collide
+            upperColl = pixelCollision(flappyRect, upperRect, birdBox, upperBox)
+            lowerColl = pixelCollision(flappyRect, lowerRect, birdBox, lowerBox)
 
-            # use boolean to see which pixel is actually drawn
-
-            # use that mask to detect for collision
-
-            # DO THIS ONCE AT THE START, then use the mask
-
-            # detect for collision
-            # check if x is too close
-            if bird.x + birdWidth > pipe.x and \
-                    bird.x < pipe.x + pipeWidth:
-
-                # check if y exceeds threshold
-                if bird.y < upperPos:
-                    return [True, 1]
-                elif bird.y + birdHeight > lowerPos:
-                    return [True, 1]
+            if upperColl or lowerColl:
+                return [True, 1]
 
     return [False, 0]
+
+def getHitbox(sprite):
+
+    # Create hitboxes
+    hitbox = []
+    for x in range(sprite.get_width()):
+        hitbox.append([])
+        for y in range(sprite.get_height()):
+            hitbox[x].append(bool(sprite.get_at((x, y))[0]))
+    return hitbox
+
+def pixelCollision(rect1, rect2, hitmask1, hitmask2):
+    """Checks if two objects collide and not just their rects"""
+    rect = rect1.clip(rect2)
+
+    if rect.width == 0 or rect.height == 0:
+        return False
+
+    x1, y1 = rect.x - rect1.x, rect.y - rect1.y
+    x2, y2 = rect.x - rect2.x, rect.y - rect2.y
+
+    for x in range(rect.width):
+        for y in range(rect.height):
+            if hitmask1[x1+x][y1+y] and hitmask2[x2+x][y2+y]:
+                return True
+    return False
 
 def main():
     # start game
@@ -159,11 +179,15 @@ def main():
     # load images #
     ###############
     background = pygame.image.load("sprites/background.png").convert()
-    flappy = pygame.image.load("sprites/bird.png").convert()
+    flappy = pygame.image.load("sprites/bird.png").convert_alpha()
     lower_pipe = pygame.image.load("sprites/pipe.png").convert_alpha()
     upper_pipe = pygame.transform.flip(
                     pygame.image.load("sprites/pipe.png").convert_alpha(), False, True)
     base = pygame.image.load("sprites/base.png").convert()
+
+    flappy_box = getHitbox(flappy)
+    upperBox = getHitbox(upper_pipe)
+    lowerBox = getHitbox(lower_pipe)
 
     pygame.draw.line(DISPLAY, helpers.RED, (0, 480), (400, 480), 2)
 
@@ -172,7 +196,6 @@ def main():
 
     pipeWidth = lower_pipe.get_width()
     pipeHeight = lower_pipe.get_height()
-
 
     # play game until finished
     done = False
@@ -195,7 +218,7 @@ def main():
         # for pipe in pipes:
         #     if abs(pipe.x - bird.x) > 120:
         #         continue
-        #     if bird.y + birdHeight > pipe.lower_y - 5 and not pipeCrash:
+        #     if bird.y + birdHeight > pipe.lower_y - 10 and not pipeCrash:
         #         bird.playerFlapped = True
         #     else:
         #         bird.playerFlapped = False
@@ -203,9 +226,6 @@ def main():
         # load background
         DISPLAY.fill(helpers.WHITE)
         DISPLAY.blit(background, (0, 0))
-
-        # 480 FOR COLLISION DETECTION
-        #pygame.draw.line(DISPLAY, helpers.RED, (0, 480), (400, 480), 2)
 
         # update bird position
         bird.update()
@@ -240,7 +260,8 @@ def main():
         DISPLAY.blit(base, (0, 480))
 
         # check for collision on nearest pipe
-        collide, pipeCrash = collisionDetector(bird, birdHeight, birdWidth, pipes, pipeHeight, pipeWidth)
+        collide, pipeCrash = collisionDetector(bird, birdHeight, birdWidth, pipes, pipeHeight, pipeWidth,
+                                               flappy_box, upperBox, lowerBox)
 
         # stop the game if the user collided
         if collide:
@@ -257,10 +278,6 @@ def main():
                 break
 
         pygame.display.update()
-
-    # check whether the user collided with a pipe, a death animation follows if so
-
-
 
 
 main()
