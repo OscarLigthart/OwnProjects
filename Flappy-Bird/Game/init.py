@@ -152,13 +152,15 @@ def pixelCollision(rect1, rect2, hitmask1, hitmask2):
     if rect.width == 0 or rect.height == 0:
         return False
 
-    x1, y1 = rect.x - rect1.x, rect.y - rect1.y
-    x2, y2 = rect.x - rect2.x, rect.y - rect2.y
+    x1, y1 = rect.x - rect1.x, rect.y - rect1.y - 10
+    x2, y2 = rect.x - rect2.x, rect.y - rect2.y - 5
 
     for x in range(rect.width):
         for y in range(rect.height):
             if hitmask1[x1+x][y1+y] and hitmask2[x2+x][y2+y]:
+                quit()
                 return True
+
     return False
 
 def main():
