@@ -217,13 +217,13 @@ def main():
         # HEURISTIC
         # closest pipe
         # todo: remove, the heuristic below
-        # for pipe in pipes:
-        #     if abs(pipe.x - bird.x) > 120:
-        #         continue
-        #     if bird.y + birdHeight > pipe.lower_y - 10 and not pipeCrash:
-        #         bird.playerFlapped = True
-        #     else:
-        #         bird.playerFlapped = False
+        for pipe in pipes:
+            if abs(pipe.x - bird.x) > 120:
+                continue
+            if bird.y + birdHeight > pipe.lower_y - 10 and not pipeCrash:
+                bird.playerFlapped = True
+            else:
+                bird.playerFlapped = False
 
         # load background
         DISPLAY.fill(helpers.WHITE)
