@@ -97,7 +97,6 @@ def run_episodes(env, memory, model, optimizer, batch_size, num_episodes, discou
         #state = scipy.misc.imresize(state, 50, 'nearest')
         state = scipy.misc.imresize(state, 25, 'nearest')
 
-
         # convert state to tensor and preprocess it for pytorch network
         state = torch.FloatTensor(torch.from_numpy(state).float())
         state = state.permute(2, 0, 1)
