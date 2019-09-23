@@ -229,6 +229,7 @@ def main():
         DISPLAY.fill(helpers.WHITE)
         DISPLAY.blit(background, (0, 0))
 
+
         # update bird position
         bird.update()
 

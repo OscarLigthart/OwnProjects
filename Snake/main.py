@@ -119,7 +119,6 @@ class Snake:
             env.board[tuple(part.location)] = 1
 
 
-
 class Bodypart:
     """
         Class that represents the snake that can be controlled by the user
@@ -210,7 +209,6 @@ def main():
     done = False
     i = 0
     while not done:
-
         df = clock.tick(8)
         DISPLAY.fill(helpers.BLACK)
         # check all events

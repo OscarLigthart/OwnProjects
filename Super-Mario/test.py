@@ -144,7 +144,7 @@ def run_episodes(env, memory, model, optimizer, batch_size, num_episodes, discou
             # perform action
             #if i % 4 == 0 and i != 0:
                 #env.render()
-            #env.render()
+            env.render()
 
         # save model every 25 episodes
         torch.save(model.state_dict(), 'models/mariomodel'+str(i))
