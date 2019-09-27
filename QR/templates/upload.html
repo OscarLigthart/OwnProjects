@@ -6,7 +6,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link href='https://fonts.googleapis.com/css?family=Merienda' rel='stylesheet'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
 <title>Upload je foto's!</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
@@ -15,8 +18,8 @@
 <style type="text/css">
 
 	.col-centered{
-    float: none;
-    margin: 0 auto;
+        float: none;
+        margin: 0 auto;
     }
 
     .inputfile {
@@ -30,10 +33,11 @@
 
     .inputfile + label { 
         width:50%;
+        max-width:200px;
         font-size: 1.25em;
         font-weight: 700;
         color: white;
-        background-color: blue;
+        background-color: #2D4283;
         display: inline-block;
         border-radius: 0.5em
     }
@@ -59,35 +63,80 @@
 
     .bgimg {
         background-image: url("{{url_for('static', filename='backgroundcropped.jpeg')}}");
+
+        /* Background image is centered vertically and horizontally at all times */
+        background-position: center center;
+        
+        /* Background image doesn't tile */
         background-repeat: no-repeat;
-        background-position: center;
+        
+        /* Background image is fixed in the viewport so that it doesn't move when 
+            the content's height is greater than the image's height */
+        background-attachment: fixed;
+        
+        /* This is what makes the background image rescale based
+            on the container's size */
+        background-size: cover;      
+
     }
+
+    .error {
+        color: red;
+        /* text-shadow: -0.5px 0 white, 0 0.5px white, 0.5px 0 white, 0 -0.5px white; */
+        font-size: 18px;
+
+    }
+
+    .errorbg {
+        width: 250px;
+        margin: 0 auto;
+        background-color: rgba(255,255,255,.7);
+        border-radius: 0.5em;
+        margin-bottom: 5%;
+    }
+
 </style>
 
+<!--
+    TO DO LIST
 
-<body style="background-size:cover">
+    - Alleen images mogen worden geupload, misschien filmpjes?
+    - Background moet groter zodat het hele scherm wordt bekledderd door dat plaatje
 
-<div class="w3-container" style="background-color:blue; color:white;">
-    <h1>Bruiloft</h1>
+-->
+<body style="background-size:cover; background-color: #0C0B11" class="bgimg">
+
+<div class="w3-container" style="background-color: #2D4283; color:white; text-align: center">
+    <h1 style="font-family: 'Merienda'; font-size: 22px;"><i>BRUILOFT MANON & CHASE</i></h1>
 </div>
     
 <div style="text-align:center">
-    <div class="w3-cell-row bgimg">
+    <div class="w3-cell-row">
         <form method = "POST" enctype = "multipart/form-data">
             <div class="form-group" style="text-align: center">
                 <br>
-                <input type = "file" name = "file" id="file" class="inputfile" />                
-                <label for="file">Kies een foto</label>
+                <input type = "file" name = "file" id="file" class="inputfile"/>                
+                <label for="file" style="font-family: 'Merienda';"><i class="fa fa-paperclip" aria-hidden="true"></i><i>  Kies een foto</i></label>                
             </div>
 
             <div class="form-group" style="text-align: center">
-                <img id="blah" src="{{url_for('static', filename='placeholder.png')}}" alt="your image" class="Image"/>
+                <label for="file">
+                    <img id="blah" src="{{url_for('static', filename='placeholder.png')}}" alt="your image" class="Image"/>
+                </label>
             </div>
-                
+
             <div class="form-group" style="text-align: center">
                 <input type = "submit" value= "Upload" id="versturen" name="versturen" class="inputfile"/>
-                <label for="versturen">Versturen</label>
+                <label for="versturen" style="font-family: 'Merienda';"><i class="fa fa-cloud-upload" aria-hidden="true"></i><i>  Versturen</i></label>
             </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                <div id="message" class="errorbg">
+                    <div class="{{ category }}">{{ message }}</div>
+                </div>
+                {% endfor %}
+            {% endwith %}
         </form>
     </div>
 </div>
@@ -95,7 +144,8 @@
 </body>
 
 <script>
-
+    
+// this function inserts the uploaded image into the template
 function readURL(input) {
   if (input.files && input.files[0]) {
     var reader = new FileReader();
@@ -109,9 +159,14 @@ function readURL(input) {
   }
 }
 
+
+// jQuery for showing the image about to be uploaded
 $("#file").change(function() {
   readURL(this);
 });
+
+// jQuery to show the error message for a limited amount of time
+$("#message").slideUp( 0 ).delay( 10 ).slideDown(400).delay(2000).slideUp(400);
 
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
