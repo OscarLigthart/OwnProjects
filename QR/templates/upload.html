@@ -39,7 +39,8 @@
         color: white;
         background-color: #2D4283;
         display: inline-block;
-        border-radius: 0.5em
+        border-radius: 0.5em;
+        border: 1px solid white;
     }
 
     .inputfile:focus + label,
@@ -56,7 +57,7 @@
         max-width: 100%;
         max-height: 250px;
         margin: auto;
-        border: 1px solid black;
+        border: 1px solid white;
         border-style: dashed;
         opacity: 0.4;
     }
@@ -101,16 +102,16 @@
     TO DO LIST
 
     - Alleen images mogen worden geupload, misschien filmpjes?
-    - Background moet groter zodat het hele scherm wordt bekledderd door dat plaatje
+    - Geef feedback aan user wanneer het gelukt is, laat ook weten hoeveelste je bent in de rij!
 
 -->
-<body style="background-size:cover; background-color: #0C0B11" class="bgimg">
+<body style="background-size:cover; background-color: #0C0B11;" class="bgimg">
 
-<div class="w3-container" style="background-color: #2D4283; color:white; text-align: center">
-    <h1 style="font-family: 'Merienda'; font-size: 22px;"><i>BRUILOFT MANON & CHASE</i></h1>
+<div class="w3-container" style="background-color: #2D4283; color:white; text-align: center; border: 1px solid white;">
+    <h1 style="font-family: 'Merienda'; font-size: 26px;"><i>Bruiloft Manon & Chase</i></h1>
 </div>
     
-<div style="text-align:center">
+<div style="text-align:center; margin: 0 auto">
     <div class="w3-cell-row">
         <form method = "POST" enctype = "multipart/form-data">
             <div class="form-group" style="text-align: center">
