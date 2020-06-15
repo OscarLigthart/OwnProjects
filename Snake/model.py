@@ -10,6 +10,9 @@ import random
 
 
 class QNetwork(nn.Module):
+    """
+    Deep Q-network
+    """
 
     def __init__(self, num_hidden=128):
         nn.Module.__init__(self)
@@ -23,6 +26,11 @@ class QNetwork(nn.Module):
 
 
 class ReplayMemory:
+    """
+    Experience replay
+    This class stores trials and shuffles them around such that the model
+    will not easily get stuck in a local optimum
+    """
 
     def __init__(self, capacity):
         self.capacity = capacity
@@ -42,6 +50,7 @@ class ReplayMemory:
 
 
 def get_epsilon(it):
+
     # random actions at first,
     if it >= 1000:
         epsilon = 0.05
@@ -53,9 +62,12 @@ def get_epsilon(it):
 
 
 def select_action(model, state, epsilon):
+
+    # feed state to model to extract action
     actions = model(torch.FloatTensor(state))
     values, indices = actions.max(0)
 
+    # determine if the model explores or not
     if random.random() < epsilon:
         a = np.random.choice(range(len(actions))).item()
     else:
@@ -65,22 +77,28 @@ def select_action(model, state, epsilon):
 
 
 def compute_q_val(model, state, action):
+
+    # get the actions given a batch of states
     actions = model(state)
 
+    # the output of the model represents the q-values
     q_val = torch.gather(actions, 1, action.view(-1, 1))
 
     return q_val
 
 
 def compute_target(model, reward, next_state, done, discount_factor):
-    # done is a boolean (vector) that indicates if next_state is terminal (episode is done)
+    """
+    Method that uses the next state to compute the target
+    """
 
+    # get action
     actions = model(next_state)
     _, indices = actions.max(1)
 
+    # convert to target
     indices = torch.gather(actions, 1, indices.view(-1, 1))
     target = reward.view(indices.shape) + (discount_factor * indices)
-    # wat gebeurt er bij done?
 
     # set target to just the reward if next_state is terminal
     target[done] = reward[done].view(target[done].shape)
@@ -88,7 +106,9 @@ def compute_target(model, reward, next_state, done, discount_factor):
 
 
 def train(model, memory, optimizer, batch_size, discount_factor):
-    # DO NOT MODIFY THIS FUNCTION
+    """
+    Method to train the model
+    """
 
     # don't learn without some decent experience
     if len(memory) < batch_size:
@@ -110,7 +130,7 @@ def train(model, memory, optimizer, batch_size, discount_factor):
     # compute the q value
     q_val = compute_q_val(model, state, action)
 
-    with torch.no_grad():  # Don't compute gradient info for the target (semi-gradient)
+    with torch.no_grad():
         target = compute_target(model, reward, next_state, done, discount_factor)
 
     # loss is measured from error between current and newly expected Q values
@@ -121,4 +141,4 @@ def train(model, memory, optimizer, batch_size, discount_factor):
     loss.backward()
     optimizer.step()
 
-    return loss.item()  # Returns a Python scalar, and releases history (similar to .detach())
+    return loss.item()

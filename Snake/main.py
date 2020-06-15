@@ -21,6 +21,7 @@ def run_episodes(train, model, memory, env, num_episodes, batch_size, discount_f
         # Take actions until end of episode
         for t in range(1000):
 
+            # determine game speed
             df = clock.tick(5)
 
             # create background
@@ -52,6 +53,7 @@ def run_episodes(train, model, memory, env, num_episodes, batch_size, discount_f
 
     return episode_durations
 
+
 def main():
 
     # create game
@@ -69,7 +71,7 @@ def main():
     # draw environment
     env.draw()
 
-    # Let's run it!
+    # hyperparameters
     num_episodes = 100
     batch_size = 4 #32
     discount_factor = 0.8
@@ -78,12 +80,13 @@ def main():
     num_hidden = 128
     df = 8
 
+    # create model
     model = QNetwork(num_hidden)
 
+    # train
     episode_durations = run_episodes(train, model, memory, env,
                                      num_episodes, batch_size,
                                      discount_factor, learn_rate, df)
-
 
 
 main()

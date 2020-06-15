@@ -206,9 +206,6 @@ class Board:
         :return: angle (normalized)
         """
 
-        # get the angle
-        angle = 0
-
         # get coordinates of snake head
         snake_x, snake_y = self.snake.head_coordinates
 
@@ -239,7 +236,7 @@ class Board:
             # normalize
             angle = -1 - (angle/180)
 
-        # normalize
+        # normalize everything below 180
         else:
             angle = angle/180
 
@@ -393,7 +390,6 @@ def place_food(env):
     env.board[x_coord, y_coord] = 2
     env.food = [x_coord, y_coord]
 
-# todo create game rules
 
 def collision_detector(snake, env):
     """ This function checks if the snake collides with itself or the walls"""
